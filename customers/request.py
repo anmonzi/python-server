@@ -1,0 +1,61 @@
+CUSTOMERS = [
+    {
+        "id": 1,
+        "name": "Hannah White",
+        "address": "7002 Chestnut Ct",
+        "email": "hannah@hannahwhite.com",
+        "animalId": 1
+    },
+    {
+        "id": 2,
+        "name": "Stacey Burns",
+        "address": "5000 Liberty Way",
+        "email": "stacy@stacyburns.com",
+        "animalId": 3
+    },
+    {
+        "id": 3,
+        "name": "Mike Harding",
+        "address": "Highway 70 South",
+        "email": "mike@mikeharding.com",
+        "animalId": 2
+    },
+    {
+        "id": 4,
+        "name": "Emily Dauer",
+        "address": "5862 Dickerson Pike",
+        "email": "emily@emilydauer.com",
+        "animalId": 5
+    },
+    {
+        "id": 5,
+        "name": "Kyle Smith",
+        "address": "55 South Street",
+        "email": "kyle@kylesmith.com",
+        "animalId": 4
+    }
+]
+
+
+def get_all_customers():
+    """Return a list of customers
+    
+    Returns:
+        [List]: list of dictionaries
+    """
+    return CUSTOMERS
+
+# Function with a single parameter
+def get_single_customer(id):
+    # Variable to hold the found customer, if it exists
+    requested_customer = None
+
+    # Iterate the EMPLOYEES list above. Similar to the
+    # for..of loops used in JavaScript.
+    for customer in CUSTOMERS:
+        # Dictionaires in Python use [] notation to find a key
+        # instead of the dot notation that JS used.
+        if customer["id"] == id:
+            requested_customer = customer
+
+    return requested_customer
