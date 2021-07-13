@@ -107,6 +107,8 @@ def delete_animal(id):
 
 
 def update_animal(id, new_animal):
+    """Edit an animal by Id
+    """
     # Iterate the ANIMALS list, but use enumerate() so that
     # you can access the index value of each item
     for index, animal in enumerate(ANIMALS):
