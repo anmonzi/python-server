@@ -93,7 +93,7 @@ def delete_animal(id):
     # can access the index value of each item
     for index, animal in enumerate(ANIMALS):
         if animal["id"] == id:
-            # Found the anima. Store the current index.
+            # Found the animal. Store the current index.
             animal_index = index
 
     # If the animal was found, use pop(int) to remove it from the list
