@@ -1,9 +1,9 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from animals import get_all_animals, get_single_animal, create_animal
-from locations import get_all_locations, get_single_location
-from employees import get_all_employees, get_single_employee
-from customers import get_all_customers, get_single_customer
+from locations import get_all_locations, get_single_location, create_location
+from employees import get_all_employees, get_single_employee, create_employee
+from customers import get_all_customers, get_single_customer, create_customer
 
 # Here's a class. It inherits from another class.
 # For now, think of a class as a container for functions that
@@ -18,6 +18,8 @@ class HandleRequests(BaseHTTPRequestHandler):
     """
 
     def parse_url(self, path):
+        """Parse url string
+        """
         # Just like splitting a string in JavaScript. If the
         # path is "/animals/1", the resulting list will
         # have "" at index 0, "animals" at index 1, and "1"
@@ -60,9 +62,9 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods',
-                         'GET, POST, PUT, DELETE')
+                        'GET, POST, PUT, DELETE')
         self.send_header('Access-Control-Allow-Headers',
-                         'X-Requested-With, Content-Type, Accept')
+                        'X-Requested-With, Content-Type, Accept')
         self.end_headers()
 
     # Here's a method on the class that overrides the parent's method.
@@ -110,6 +112,7 @@ class HandleRequests(BaseHTTPRequestHandler):
 
     # Here's a method on the class that overrides the parent's method.
     # It handles any POST request.
+
     def do_POST(self):
         """Handles POST requests to the server
         """
@@ -125,18 +128,32 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Parse the URL
         (resource, id) = self.parse_url(self.path)
 
-        # Initialize new animal
+        # Initializations of new data
         new_animal = None
+        new_location = None
+        new_employee = None
+        new_customer = None
 
-        # Add a new animal to the list. Don't worry about
-        # the orange squiggle, you'll define the create_animal
-        # function next.
+        # Add a new animal or other new data to the list.
         if resource == "animals":
             new_animal = create_animal(post_body)
-        
+            # Encode the new animal and send in response
+            self.wfile.write(f"{new_animal}".encode())
 
-        # Encode the new animal and send in response
-        self.wfile.write(f"{new_animal}".encode())
+        if resource == "locations":
+            new_location = create_location(post_body)
+            # Encode the new location and send in response
+            self.wfile.write(f"{new_location}".encode())
+
+        if resource == "employees":
+            new_employee = create_employee(post_body)
+            # Encode the new employee and send in response
+            self.wfile.write(f"{new_employee}".encode())
+
+        if resource == "customers":
+            new_customer = create_customer(post_body)
+            # Encode the new customer and send in response
+            self.wfile.write(f"{new_customer}".encode())
 
     # Here's a method on the class that overrides the parent's method.
     # It handles any PUT request.

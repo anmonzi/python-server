@@ -48,6 +48,8 @@ def get_all_animals():
 
 # Function with a single parameter
 def get_single_animal(id):
+    """Return a single animal by Id
+    """
     # Variable to hold the found animal, if it exists
     requested_animal = None
 
@@ -63,6 +65,8 @@ def get_single_animal(id):
 
 
 def create_animal(animal):
+    """Create a NEW animal
+    """
     # Get the id value of the last animal in the list
     max_id = ANIMALS[-1]["id"]
 

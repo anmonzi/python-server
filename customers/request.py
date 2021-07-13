@@ -39,7 +39,6 @@ CUSTOMERS = [
 
 def get_all_customers():
     """Return a list of customers
-    
     Returns:
         [List]: list of dictionaries
     """
@@ -47,6 +46,8 @@ def get_all_customers():
 
 # Function with a single parameter
 def get_single_customer(id):
+    """Returns a single customer by Id
+    """
     # Variable to hold the found customer, if it exists
     requested_customer = None
 
@@ -59,3 +60,19 @@ def get_single_customer(id):
             requested_customer = customer
 
     return requested_customer
+
+
+def create_customer(customer):
+    """Create a NEW customer
+    """
+    # Get the id value of the last customer in the list
+    max_id = CUSTOMERS[-1]["id"]
+    # Add 1 to whatever that number is
+    new_id = max_id + 1
+    # Add an `id` property to the customer dictionary
+    customer["id"] = new_id
+    # Add the customer dictionary to the list
+    CUSTOMERS.append(customer)
+    # Return the dictionary with `id` property added
+    return customer
+    
