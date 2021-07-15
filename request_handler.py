@@ -136,11 +136,11 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Add a new animal or other new data to the list.
         if resource == "animals":
             response = create_animal(post_body)
-        elif resource == "locations":
+        if resource == "locations":
             response = create_location(post_body)
-        elif resource == "employees":
+        if resource == "employees":
             response = create_employee(post_body)
-        elif resource == "customers":
+        if resource == "customers":
             response = create_customer(post_body)
 
         self.wfile.write(f"{response}".encode())
