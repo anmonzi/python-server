@@ -82,28 +82,24 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "animals":
             if id is not None:
                 response = f"{get_single_animal(id)}"
-
             else:
                 response = f"{get_all_animals()}"
 
-        elif resource == "locations":
+        if resource == "locations":
             if id is not None:
                 response = f"{get_single_location(id)}"
-
             else:
                 response = f"{get_all_locations()}"
 
-        elif resource == "employees":
+        if resource == "employees":
             if id is not None:
                 response = f"{get_single_employee(id)}"
-
             else:
                 response = f"{get_all_employees()}"
 
-        elif resource == "customers":
+        if resource == "customers":
             if id is not None:
                 response = f"{get_single_customer(id)}"
-
             else:
                 response = f"{get_all_customers()}"
 
@@ -126,7 +122,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         post_body = json.loads(post_body)
 
         # Parse the URL
-        (resource, id) = self.parse_url(self.path)
+        (resource, _) = self.parse_url(self.path)
 
         # Initializations of new data
         # was new_animal = None
@@ -162,11 +158,11 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Edit a single animal or other dictionary from the list
         if resource == "animals":
             update_animal(id, post_body)
-        elif resource == "employees":
+        if resource == "employees":
             update_employee(id, post_body)
-        elif resource == "customers":
+        if resource == "customers":
             update_customer(id, post_body)
-        elif resource == "locations":
+        if resource == "locations":
             update_location(id, post_body)
 
         # Encode the new animal and send in response
@@ -185,11 +181,11 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Delete a single animal/ or dictionary from the list by id
         if resource == "animals":
             delete_animal(id)
-        elif resource == "locations":
+        if resource == "locations":
             delete_location(id)
-        elif resource == "employees":
+        if resource == "employees":
             delete_employee(id)
-        elif resource == "customers":
+        if resource == "customers":
             delete_customer(id)
 
         # Encode the new animal and send in response
