@@ -1,3 +1,7 @@
+import sqlite3
+import json
+from models import Location
+
 LOCATIONS = [
     {
         "id": 1,
@@ -16,32 +20,102 @@ LOCATIONS = [
     }
 ]
 
+# Old function for LOCATIONS list above
+# def get_all_locations():
+#     """Return a list of locations
 
+#     Returns:
+#         [List]: list of dictionaries
+#     """
+#     return LOCATIONS
+
+
+
+# SQL GET function
 def get_all_locations():
-    """Return a list of locations
+    """Return a list of locations"""
+    # Open a connection to the database
+    with sqlite3.connect("./kennel.db") as conn:
+        # Black box area
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
 
-    Returns:
-        [List]: list of dictionaries
-    """
-    return LOCATIONS
+        # Write the SQL query to get the info you want
+        db_cursor.execute("""
+        SELECT
+            a.id,
+            a.name,
+            a.address
+        FROM location a
+        """)
+
+        # Initialize an empty list to hold all location representations
+        locations = []
+        # Convert rows of data into a Python list
+        dataset = db_cursor.fetchall()
+        # Iterate list of data returned from database
+        for row in dataset:
+            # Create a location instance from the current row.
+            # Note that the database fields are specified in
+            # exact order of the parameters defined in the
+            # Location Class imported above.
+            location = Location(row['id'], row['name'], row['address'])
+
+            locations.append(location.__dict__)
+
+    # Use `json` package to properly serialize list as JSON
+    return json.dumps(locations) # Converts Python object into a json string
 
 
+
+# Old function for LOCATIONS list above
 # Function with a single parameter
+# def get_single_location(id):
+#     """Return a single location by Id
+#     """
+#     # Variable to hold the found location, if it exists
+#     requested_location = None
+
+#     #  Iterate the LOCATIONS list above. Similar to the
+#     #  for..of loops used in JavaScript.
+#     for location in LOCATIONS:
+#     # Dictionaires in Python use [] notation to find a key
+#     # instead of the dot notation that JS used.
+#         if location["id"] == id:
+#             requested_location = location
+
+#         return requested_location
+
+
+
+# SQL GET function
 def get_single_location(id):
-    """Return a single location by Id
-    """
-    # Variable to hold the found location, if it exists
-    requested_location = None
+    """Return a single location by Id"""
+    with sqlite3.connect("./kennel.db") as conn:
+        # Black box area
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
 
-    #  Iterate the LOCATIONS list above. Similar to the
-    #  for..of loops used in JavaScript.
-    for location in LOCATIONS:
-      # Dictionaires in Python use [] notation to find a key
-      # instead of the dot notation that JS used.
-        if location["id"] == id:
-            requested_location = location
+        # Use a ? parameter to inject a variable's value
+        # into the SQL statement
+        db_cursor.execute("""
+        SELECT
+            l.id,
+            l.name,
+            l.address
+        FROM location l
+        WHERE l.id = ?
+        """, ( id, ))
 
-        return requested_location
+        # Load the single result into memory
+        data = db_cursor.fetchone()
+        # Create a location instance from the current row
+        location = Location(data['id'], data['name'], data['address'])
+
+        return json.dumps(location.__dict__)
+
+
+
 
 
 def create_location(location):

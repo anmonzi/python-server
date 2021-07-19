@@ -49,6 +49,7 @@ CUSTOMERS = [
 #     return CUSTOMERS
 
 
+
 # SQL GET function
 def get_all_customers():
     """Return a list of customers
@@ -81,7 +82,7 @@ def get_all_customers():
             # Create a customer instance from the current row.
             # Note that the database fields are specified in
             # exact order of the parameters defined in the
-            # Customer class above.
+            # Customer class imported above.
             customer = Customer(row['id'], row['name'], row['address'],
                                 row['email'], row['password'])
 
@@ -91,22 +92,59 @@ def get_all_customers():
     return json.dumps(customers) #converts Python object into a json string
 
 
-# Function with a single parameter
+
+# Old function for CUSTOMERS list above
+# # Function with a single parameter
+# def get_single_customer(id):
+#     """Returns a single customer by Id
+#     """
+#     # Variable to hold the found customer, if it exists
+#     requested_customer = None
+
+#     # Iterate the EMPLOYEES list above. Similar to the
+#     # for..of loops used in JavaScript.
+#     for customer in CUSTOMERS:
+#         # Dictionaires in Python use [] notation to find a key
+#         # instead of the dot notation that JS used.
+#         if customer["id"] == id:
+#             requested_customer = customer
+
+#     return requested_customer
+
+
+
+# SQL GET function
 def get_single_customer(id):
-    """Returns a single customer by Id
-    """
-    # Variable to hold the found customer, if it exists
-    requested_customer = None
+    """Return a single customer by Id"""
+    with sqlite3.connect("./kennel.db") as conn:
+        # Black box area
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
 
-    # Iterate the EMPLOYEES list above. Similar to the
-    # for..of loops used in JavaScript.
-    for customer in CUSTOMERS:
-        # Dictionaires in Python use [] notation to find a key
-        # instead of the dot notation that JS used.
-        if customer["id"] == id:
-            requested_customer = customer
+        # Use a ? parameter to inject a variable's value
+        # into the SQL statement
+        db_cursor.execute("""
+        SELECT
+            a.id,
+            a.name,
+            a.address,
+            a.email,
+            a.password
+        FROM customer a
+        WHERE a.id = ?
+        """, ( id, ))
 
-    return requested_customer
+        # Load the single result into memory
+        data = db_cursor.fetchone()
+
+        # Create a customer instance from the current row
+        customer = Customer(data['id'], data['name'], data['address'],
+                            data['email'], data['password'])
+
+        return json.dumps(customer.__dict__)
+
+
+
 
 
 def create_customer(customer):

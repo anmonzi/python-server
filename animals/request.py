@@ -54,6 +54,9 @@ ANIMALS = [
 #     """
 #     return ANIMALS
 
+
+
+
 # SQL GET function
 def get_all_animals():
     """Return a list of animals
@@ -91,7 +94,7 @@ def get_all_animals():
             # Create an animal instance from the current row.
             # Note that the database fields are specified in
             # exact order of the parameters defined in the
-            # Animal class above.
+            # Animal class imported above.
             animal = Animal(row['id'], row['name'], row['breed'],
                             row['status'], row['location_id'],
                             row['customer_id'])
@@ -100,6 +103,9 @@ def get_all_animals():
 
     # Use `json` package to properly serialize list as JSON
     return json.dumps(animals) # converts Python object into a json string
+
+
+
 
 # Old function for ANIMALS list above
 # Function with a single parameter
@@ -118,6 +124,9 @@ def get_all_animals():
 #             requested_animal = animal
 
 #     return requested_animal
+
+
+
 
 # SQL GET function
 def get_single_animal(id):
@@ -149,6 +158,9 @@ def get_single_animal(id):
                             data['customer_id'])
 
         return json.dumps(animal.__dict__)
+
+
+
 
 
 def create_animal(animal):
