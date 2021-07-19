@@ -20,7 +20,7 @@ LOCATIONS = [
     }
 ]
 
-# Old function for LOCATIONS list above
+# Old function for LOCATIONS list above (transient state)
 # def get_all_locations():
 #     """Return a list of locations
 
@@ -68,7 +68,7 @@ def get_all_locations():
 
 
 
-# Old function for LOCATIONS list above
+# Old function for LOCATIONS list above (transient state)
 # Function with a single parameter
 # def get_single_location(id):
 #     """Return a single location by Id
@@ -137,22 +137,37 @@ def create_location(location):
     return location
 
 
+
+# Old function for LOCATIONS list above (transient state)
+# def delete_location(id):
+#     """Delete a location by Id
+#     """
+#     # Initial -1 value for location index, in case one isn't found
+#     location_index = -1
+
+#     # Iterate the LOCATIONS list, but use enumerate() so that you
+#     # can access the index value of each item
+#     for index, location in enumerate(LOCATIONS):
+#         if location["id"] == id:
+#             # Found the location. Store the current index.
+#             location_index = index
+
+#     # If the location was found, use pop(int) to remove it from the list
+#     if location_index >= 0:
+#         LOCATIONS.pop(location_index)
+
+
+# SQL DELETE function
 def delete_location(id):
-    """Delete a location by Id
-    """
-    # Initial -1 value for location index, in case one isn't found
-    location_index = -1
+    """Delete a location by Id"""
+    with sqlite3.connect("./kennel.db") as conn:
+        db_cursor = conn.cursor()
 
-    # Iterate the LOCATIONS list, but use enumerate() so that you
-    # can access the index value of each item
-    for index, location in enumerate(LOCATIONS):
-        if location["id"] == id:
-            # Found the location. Store the current index.
-            location_index = index
+        db_cursor.execute("""
+        DELETE FROM location
+        WHERE id = ?
+        """, ( id, ))
 
-    # If the location was found, use pop(int) to remove it from the list
-    if location_index >= 0:
-        LOCATIONS.pop(location_index)
 
 
 def update_location(id, new_location):

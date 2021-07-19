@@ -45,7 +45,7 @@ ANIMALS = [
     }
 ]
 
-# Old function for ANIMALS list above
+# Old function for ANIMALS list above (transient state)
 # def get_all_animals():
 #     """Return a list of animals
 
@@ -107,7 +107,7 @@ def get_all_animals():
 
 
 
-# Old function for ANIMALS list above
+# Old function for ANIMALS list above (transient state)
 # Function with a single parameter
 # def get_single_animal(id):
 #     """Return a single animal by Id
@@ -244,22 +244,38 @@ def create_animal(animal):
     return animal
 
 
+
+# Old function for ANIMALS list above (transient state)
+# def delete_animal(id):
+#     """Delete an animal by Id
+#     """
+#     # Initial -1 value for animal index, in case one isn't found
+#     animal_index = -1
+
+#     # Iterate the ANIMALS list, but use enumerate() so that you
+#     # can access the index value of each item
+#     for index, animal in enumerate(ANIMALS):
+#         if animal["id"] == id:
+#             # Found the animal. Store the current index.
+#             animal_index = index
+
+#     # If the animal was found, use pop(int) to remove it from the list
+#     if animal_index >= 0:
+#         ANIMALS.pop(animal_index)
+
+
+# SQL DELETE function
 def delete_animal(id):
-    """Delete an animal by Id
-    """
-    # Initial -1 value for animal index, in case one isn't found
-    animal_index = -1
+    """Delete an animal by Id"""
+    with sqlite3.connect("./kennel.db") as conn:
+        db_cursor = conn.cursor()
 
-    # Iterate the ANIMALS list, but use enumerate() so that you
-    # can access the index value of each item
-    for index, animal in enumerate(ANIMALS):
-        if animal["id"] == id:
-            # Found the animal. Store the current index.
-            animal_index = index
+        db_cursor.execute("""
+        DELETE FROM animal
+        WHERE id = ?
+        """, ( id, ))
 
-    # If the animal was found, use pop(int) to remove it from the list
-    if animal_index >= 0:
-        ANIMALS.pop(animal_index)
+
 
 
 def update_animal(id, new_animal):

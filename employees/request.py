@@ -45,7 +45,7 @@ EMPLOYEES = [
     }
 ]
 
-# Old function for EMPLOYEES list above
+# Old function for EMPLOYEES list above (transient state)
 # def get_all_employees():
 #     """Return a list of employees
 #     Returns:
@@ -92,7 +92,7 @@ def get_all_employees():
 
 
 
-# Old function for EMPLOYEES list above
+# Old function for EMPLOYEES list above (transient state)
 # Function with a single parameter
 # def get_single_employee(id):
 #     """Return a single employee by Id
@@ -185,21 +185,36 @@ def create_employee(employee):
     return employee
 
 
+
+# Old function for EMPLOYEES list above (transient state)
+# def delete_employee(id):
+#     """Delete an employee by Id
+#     """
+#     # Initial -1 value for employee index, in case one isn't found
+#     employee_index = -1
+
+#     # Iterate the EMPLOYEES list, but use enumerate() so that you
+#     # can access the index value of each item
+#     for index, employee in enumerate(EMPLOYEES):
+#         if employee["id"] == id:
+#             employee_index = index
+
+#     # If the employee was found, use pop() to remove it from the list
+#     if employee_index >= 0:
+#         EMPLOYEES.pop(employee_index)
+
+
+# SQL DELETE function
 def delete_employee(id):
-    """Delete an employee by Id
-    """
-    # Initial -1 value for employee index, in case one isn't found
-    employee_index = -1
+    """Delete an employee by Id"""
+    with sqlite3.connect("./kennel.db") as conn:
+        db_cursor = conn.cursor()
 
-    # Iterate the EMPLOYEES list, but use enumerate() so that you
-    # can access the index value of each item
-    for index, employee in enumerate(EMPLOYEES):
-        if employee["id"] == id:
-            employee_index = index
+        db_cursor.execute("""
+        DELETE FROM employee
+        WHERE id = ?
+        """, ( id, ))
 
-    # If the employee was found, use pop() to remove it from the list
-    if employee_index >= 0:
-        EMPLOYEES.pop(employee_index)
 
 
 def update_employee(id, new_employee):
