@@ -216,14 +216,42 @@ def delete_employee(id):
         """, ( id, ))
 
 
+# Old function for EMPLOYEES list above (transient state)
+# def update_employee(id, new_employee):
+#     """Edit an employee by Id
+#     """
+#     # Iterate the EMPLOYEES list, but with enumerate() so that
+#     # you can access the index value of each item
+#     for index, employee in enumerate(EMPLOYEES):
+#         if employee["id"] == id:
+#             # Found the employee. Update the value.
+#             EMPLOYEES[index] = new_employee
+#             break
 
+
+# SQL PUT function
 def update_employee(id, new_employee):
-    """Edit an employee by Id
-    """
-    # Iterate the EMPLOYEES list, but with enumerate() so that
-    # you can access the index value of each item
-    for index, employee in enumerate(EMPLOYEES):
-        if employee["id"] == id:
-            # Found the employee. Update the value.
-            EMPLOYEES[index] = new_employee
-            break
+    """Edit an employee by Id"""
+    with sqlite3.connect("./kennel.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        UPDATE employee
+            SET
+                name = ?,
+                address = ?,
+                location_id = ?
+        WHERE id = ?
+        """, (new_employee['name'], new_employee['address'],
+                new_employee['location_id'], id, ))
+
+        # Were any rows affected?
+        # Did the client send an `id` that exists?
+        rows_affected = db_cursor.rowcount
+
+    if rows_affected == 0:
+        # Forces 404 response by main module
+        return False
+    else:
+        # Forces 204 response by main module
+        return True

@@ -46,8 +46,7 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         # Check if there is a query string parameter
         if "?" in resource:
-            # GIVEN: /customers?email=jenna@solis.com
-
+            # GIVEN: /customers?email=jenna@solis.com ['customers, 'email=jenna@solis.com']
             param = resource.split("?")[1] # email=jenna@solis.com
             resource = resource.split("?")[0] # 'customers'
             pair = param.split("=") # ['email', 'jenna@solis.com']
@@ -238,7 +237,7 @@ class HandleRequests(BaseHTTPRequestHandler):
     def do_PUT(self):
         """Handles PUT requests to the server
         """
-        self._set_headers(204)
+        # self._set_headers(204)
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
         post_body = json.loads(post_body)
@@ -246,16 +245,22 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Pars the URL
         (resource, id) = self.parse_url(self.path)
 
+        success = False
+
         # Edit a single animal or other dictionary from the list
         if resource == "animals":
-            update_animal(id, post_body)
-        if resource == "employees":
-            update_employee(id, post_body)
-        if resource == "customers":
-            update_customer(id, post_body)
-        if resource == "locations":
-            update_location(id, post_body)
+            success = update_animal(id, post_body)
+        elif resource == "employees":
+            success = update_employee(id, post_body)
+        elif resource == "customers":
+            success = update_customer(id, post_body)
+        elif resource == "locations":
+            success = update_location(id, post_body)
 
+        if success:
+            self._set_headers(204)
+        else:
+            self._set_headers(404)
         # Encode the new animal and send in response
         self.wfile.write("".encode())
 

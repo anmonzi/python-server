@@ -223,14 +223,43 @@ def delete_customer(id):
         """, ( id, ))
 
 
+# Old function for CUSTOMERS list above (transient state)
+# def update_customer(id, new_customer):
+#     """Edit a customer by Id
+#     """
+#     # Iterate the CUSTOMERS list, but with enumerate() so that
+#     #  you can access the index value of each item
+#     for index, customer in enumerate(CUSTOMERS):
+#         if customer["id"] == id:
+#             # Found the customer. Update the value.
+#             CUSTOMERS[index] = new_customer
+#             break
 
+
+# SQL PUT function
 def update_customer(id, new_customer):
-    """Edit a customer by Id
-    """
-    # Iterate the CUSTOMERS list, but with enumerate() so that
-    #  you can access the index value of each item
-    for index, customer in enumerate(CUSTOMERS):
-        if customer["id"] == id:
-            # Found the customer. Update the value.
-            CUSTOMERS[index] = new_customer
-            break
+    """Edit a customer by Id"""
+    with sqlite3.connect("./kennel.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        UPDATE customer
+            SET
+                name = ?,
+                address = ?,
+                email = ?,
+                password = ?
+        WHERE id = ?
+        """, (new_customer['name'], new_customer['address'],
+                new_customer['email'], new_customer['password'], id, ))
+
+        # Were any rows affected?
+        # Did the client send an `id` that exists?
+        rows_affected = db_cursor.rowcount
+
+    if rows_affected == 0:
+        # Forces 404 response by main module
+        return False
+    else:
+        # Forces 204 response by main module
+        return True

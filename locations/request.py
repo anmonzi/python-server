@@ -169,14 +169,40 @@ def delete_location(id):
         """, ( id, ))
 
 
+# Old function for LOCATIONS list above (transient state)
+# def update_location(id, new_location):
+#     """Edit a location by Id
+#     """
+#     # Iterate the LOCATIONS list, but with enumerate() so that
+#     # you can access the index value of each item
+#     for index, location in enumerate(LOCATIONS):
+#         if location["id"] == id:
+#             # Found the location. Update the value.
+#             LOCATIONS[index] = new_location
+#             break
 
+
+# SQL PUT function
 def update_location(id, new_location):
-    """Edit a location by Id
-    """
-    # Iterate the LOCATIONS list, but with enumerate() so that
-    # you can access the index value of each item
-    for index, location in enumerate(LOCATIONS):
-        if location["id"] == id:
-            # Found the location. Update the value.
-            LOCATIONS[index] = new_location
-            break
+    """Edit a locaiton by Id"""
+    with sqlite3.connect("./kennel.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        UPDATE location
+            SET
+                name = ?,
+                address = ?
+        WHERE id = ?
+        """, (new_location['name'], new_location['address'], id, ))
+
+        # Were any rows affected?
+        # Did the client send an `id` that exists?
+        rows_affected = db_cursor.rowcount
+
+    if rows_affected == 0:
+        # Forces 404 response by main module
+        return False
+    else:
+        # Forces 204 response by main module
+        return True
