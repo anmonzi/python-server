@@ -1,8 +1,6 @@
-from models.location import Location
 import sqlite3
 import json
-from sqlite3 import dbapi2
-from models import Animal, Location, Customer
+from models import Animal, Customer, Location
 
 ANIMALS = [
     {
@@ -111,14 +109,14 @@ def get_all_animals():
                             row['status'], row['location_id'],
                             row['customer_id'])
             # Create a Location instance from the current row
-            location = Location(row['id'], row['location_name'], row['location_address'])
+            location = Location(row['location_id'], row['location_name'], row['location_address'])
+            # Create a Customer instance from the current row
+            customer = Customer(row['customer_id'], row['customer_name'], row['customer_address'],
+                        row['customer_email'], row['customer_password'])
             # Add the dictionary (like an object on an object) representation of the location to the animal
             animal.location = location.__dict__
-            # Create a Customer instance from the current row
-            customer = Customer(row['id'], row['customer_name'], row['customer_address'],
-                        row['customer_email'], row['customer_password'])
             animal.customer = customer.__dict__
-            
+
             # Add the dictionary representation of the animal to the list
             animals.append(animal.__dict__)
 
