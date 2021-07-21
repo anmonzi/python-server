@@ -178,20 +178,46 @@ def get_employees_by_location(location_id):
 
     return json.dumps(employees)
 
+# Old function for EMPLOYEES list above (transient state)
+# def create_employee(employee):
+#     """Create a NEW employee
+#     """
+#     # Get the id value of the last location in the list
+#     max_id = EMPLOYEES[-1]["id"]
+#     # Add 1 to whatever that number is
+#     new_id = max_id + 1
+#     # Add an `id` property to the employee dictionary
+#     employee["id"] = new_id
+#     # Add the employee dictionary to the list
+#     EMPLOYEES.append(employee)
+#     # Return the dictionary with `id` property added
+#     return employee
 
-def create_employee(employee):
-    """Create a NEW employee
-    """
-    # Get the id value of the last location in the list
-    max_id = EMPLOYEES[-1]["id"]
-    # Add 1 to whatever that number is
-    new_id = max_id + 1
-    # Add an `id` property to the employee dictionary
-    employee["id"] = new_id
-    # Add the employee dictionary to the list
-    EMPLOYEES.append(employee)
-    # Return the dictionary with `id` property added
-    return employee
+
+# SQL POST function
+def create_employee(new_employee):
+    """Create a NEW employee"""
+    with sqlite3.connect("./kennel.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        INSERT INTO Employee
+            (name, address, location_id)
+        VALUES
+            (?, ?, ?);
+        """, (new_employee['name'], new_employee['address'], new_employee['location_id'], ))
+
+        # The `lastrowid` property on the cursor will return
+        # the primary key of the last thing that got added to
+        # the database.
+        id = db_cursor.lastrowid
+
+        # Add the `id` property to the animal dictionary that
+        # was sent by the client so that the client sees the
+        # primary key in the response.
+        new_employee['id'] = id
+
+        return json.dumps(new_employee)
 
 
 
